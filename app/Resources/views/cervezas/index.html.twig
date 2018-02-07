@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Cervezas Web App  {% endblock %}
+
+{% block body %} 
+    <h1> ¡Bienvenido! </h1>
+    {{form_start(loginform)}} 
+    {{form_widget(loginform)}} 
+    {{form_end(loginform)}}
+{% endblock %}
