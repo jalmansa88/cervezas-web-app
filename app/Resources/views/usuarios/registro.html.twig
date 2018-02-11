@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Cervezas Web App-Registro Usuario  {% endblock %}
+
+{% block body %} 
+    <h1>¡Regístrate!</h1>
+    {{form_start(registerform)}} 
+    {{form_widget(registerform)}} 
+    {{form_end(registerform)}}
+{% endblock %}

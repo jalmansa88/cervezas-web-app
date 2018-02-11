@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Cervezas Web App  {% endblock %}
+
+{% block body %} 
+    <h1> ¡Bienvenido {{ userName }}!</h1>
+    <p> Esta es tu lista de Cervezas: </p>
+    
+    <ul>
+        {% for cerveza in cervezas %}
+            <li>
+                {{ cerveza.nombre }} - Alcohol {{ cerveza.alc}}% - Notas: {{cerveza.notes}}
+                [<a href="/user/{{userId}}/beer/delete/{{cerveza.id}}">Eliminar Cerveza</a>]
+                [<a href="/user/{{userId}}/beer/edit">Editar Nota</a>]
+            </li>
+        {% endfor %}
+        <br>
+        <a href="/user/{{userId}}/beer/add">Añadir Cerveza</a>
+    </ul>
+{% endblock %}

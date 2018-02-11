@@ -5,13 +5,11 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType; 
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-
-
-
+/**
+ * @Route("/cervezas")
+ */
 class CervezaController extends Controller
 {
     
@@ -23,10 +21,27 @@ class CervezaController extends Controller
     }
     
     /**
-    * @Route("/read")
+    * @Route("/user/{userId}", name="get_vervezas")
     */
-    public function read(Request $request){
+    public function getBeerByUserIdAction($userId, Request $request){
+        $dbResult = $this->getDoctrine()->getRepository('AppBundle:cerveza')
+                ->createQueryBuilder('c')
+                ->join('AppBundle:usuario_beer_mapping', 'ubm', 'WITH', 'ubm.cervezaId = c.id')
+                ->where('ubm.userId = :id')
+                ->setParameter('id', $userId)
+                ->getQuery()
+                ->getArrayResult();
         
+//        foreach ($dbResult as $cerveza) {
+//                $cervezas[] = array(
+//                    'nombre' => $cerveza->getNombre(),
+//                    'alc' => $cerveza->getAlc()
+//                );
+//        }
+        $response = new JsonResponse($dbResult);
+        $response->headers->set('Content-Type', 'application/json');
+        
+        return $response;
     }
         
     /**

@@ -11,6 +11,9 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 use AppBundle\Entity\usuario;
+use AppBundle\Entity\cerveza;
+use AppBundle\Entity\usuario_beer_mapping;
+
 
 class UserController extends Controller
 {
@@ -26,13 +29,13 @@ class UserController extends Controller
                 ->add('Login', SubmitType::class ) 
                 ->getForm();
 
-        return $this->render('cervezas/index.html.twig', [
+        return $this->render('usuarios/index.html.twig', [
             'loginform' => $form->createView()
             ]);
     }
     
     /**
-    * @Route("/views/login", name="login")
+    * @Route("/user/views/login", name="login")
     */
     public function login(Request $request){
         
@@ -47,34 +50,53 @@ class UserController extends Controller
                     ->findOneByUser($user);
             
             if($usuario != null && $usuario->getPass() == $pass){
-                return $this->render('cervezas/verCervezas.html.twig', [
-                        'name' => $usuario->getNombre(),
-                        'user' => $usuario->getUser()
-                    ]);
+                
+                return $this->redirectToRoute('user_dashboard', array(
+                        'userName' => $usuario->getNombre(),
+                        'userId' => $usuario->getId()
+                    ), 307);
             }else{
-                return $this->render('cervezas/invalidLogin.html.twig', [
+                return $this->render('usuarios/invalidLogin.html.twig', [
                         'reason' => "Usuario y/o contraseña no validos"
                     ]);
             }
         }else{
-            return $this->render('cervezas/invalidLogin.html.twig', [
+            return $this->render('usuarios/invalidLogin.html.twig', [
                     'reason' => "User y/o Pass no vienen en la peticion!"
                 ]);
         }
     }
     
     /**
-     * @Route("/views/user", name="user_dashboard")
-     */
-    public function viewCervezasPorUsuario(Request $request){
-        $id = $request->query->get('id');
-    }
-    
-    /**
-    * @Route("/user/register")
+    * @Route("/user/views/register")
     */
     public function register(Request $request){
+        $usuario = new usuario;
+        $form = $this->createFormBuilder($usuario)
+                ->add('user', TextType::class)
+                ->add('pass', PasswordType::class)
+                ->add('nombre', TextType::class)
+                ->add('aceptar', SubmitType::class)
+                ->getForm();
         
+        $form->handleRequest($request);
+        
+        if($form->isSubmitted() && $form->isValid()){
+            $user = $form['user']->getData();
+            $pass = $form['pass']->getData();
+            $nombre = $form['nombre']->getData();
+            
+            $usuario->setNombre($nombre);
+            $usuario->setPass($pass);
+            $usuario->setUser($user);
+            
+            $userDao = $this->getDoctrine()->getManager();
+            $userDao->persist($usuario);
+            $userDao->flush();
+        }
+        
+        return $this->render('usuarios/registro.html.twig',
+                ['registerform' => $form->createView()]);
     }
            
     /**
@@ -90,4 +112,33 @@ class UserController extends Controller
     public function delete(Request $request){
         
     }    
+    
+    /**
+    * @Route("/user", name="user_dashboard")
+    */
+    public function viewCervezasPorUsuario(Request $request){
+        $userName = $request->get('userName');
+        $userId = $request->get('userId');
+        
+//        $response = json_decode($this->forward('AppBundle:Cerveza:getBeerByUserId', array(
+//                'userId'  => $userId
+//            )));
+//
+//        $cervezas = $response['cervezas'];
+        $cervezas = $this->getDoctrine()->getManager()  //getRepository('AppBundle:cerveza', 'c')
+                ->createQueryBuilder()
+                ->select('c.id', 'c.nombre', 'c.alc', 'ubm.notes')
+                ->from('AppBundle:cerveza', 'c')
+                ->join('AppBundle:usuario_beer_mapping', 'ubm', 'WITH', 'ubm.cervezaId = c.id')
+                ->where('ubm.userId = :id')
+                ->setParameter('id', $userId)
+                ->getQuery()
+                ->getResult();
+
+        return $this->render('usuarios/verCervezas.html.twig', [
+                        'userName' => $userName,
+                        'userId' => $userId,
+                        'cervezas' => $cervezas
+                    ]);
+    }
 }
