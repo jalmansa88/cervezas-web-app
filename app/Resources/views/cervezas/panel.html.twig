@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Cervezas Web App  {% endblock %}
+
+{% block body %} 
+    <h1> Gestion de Cervezas en la Base de Datos</h1>
+    <p> Listado completo de cervezas: </p>
+    <ul>
+        {% for cerveza in cervezas %}
+            <li>
+                {{ cerveza.nombre }} - Alcohol {{ cerveza.alc}}%
+                <a href="/cervezas/delete/{{cerveza.id}}"><button>Eliminar</button></a>
+                <a href="/cervezas/update/{{cerveza.id}}"><button>Editar</button></a>
+            </li>
+        {% endfor %}
+        <br>
+        <a href="/cervezas/create"><button>Crear Nueva</button></a>
+        <br>
+        <a href="/user/{{ app.session.get('userId') }}">
+            <button>Volver al panel de usuario</button>
+        </a>
+    </ul>
+{% endblock %}

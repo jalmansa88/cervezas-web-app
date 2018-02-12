@@ -4,17 +4,21 @@
 
 {% block body %} 
     <h1> ¡Bienvenido {{ userName }}!</h1>
-    <p> Esta tu registro de Cervezas: </p>
+    <h2> Panel de usuario </h2>
+    <p> Este es tu registro de Cervezas: </p>
     
     <ul>
         {% for cerveza in cervezas %}
             <li>
                 {{ cerveza.nombre }} - Alcohol {{ cerveza.alc}}% - Notas: {{cerveza.notes}}
-                [<a href="/user/beer/delete/{{cerveza.mappingId}}">Eliminar Cerveza</a>]
-                [<a href="/user/beer/edit/{{cerveza.mappingId}}">Editar Nota</a>]
+                <a href="/user/beer/delete/{{cerveza.mappingId}}"><button>Eliminar</button></a>
+                <a href="/user/beer/edit/{{cerveza.mappingId}}"><button>Editar nota</button></a>
             </li>
         {% endfor %}
+        <a href="/user/{{userId}}/beer/add"><button>Añadir Cerveza</button></a>
         <br>
-        <a href="/user/{{userId}}/beer/add">Añadir Cerveza</a>
+        <br>
+        <a href="/user/{{userId}}/update"><button>Editar Usuario</button></a>
+        <a href="/user/{{userId}}/logout"><button>Desconectarse</button></a>
     </ul>
 {% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Cervezas Web App - Nueva Cerveza {% endblock %}
+
+{% block body %} 
+    <h1>¡Creando nueva cerveza!</h1>
+    {{form_start(createbeerform)}} 
+    {{form_widget(createbeerform)}} 
+    {{form_end(createbeerform)}}
+{% endblock %}

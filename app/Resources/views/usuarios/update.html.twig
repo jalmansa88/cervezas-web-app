@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Cervezas Web App - Modificar datos usuario {% endblock %}
+
+{% block body %} 
+    <h1>Modificar usuario</h1>
+    <p>Dejar en blanco los campos que no se deseen modificar.<p>
+    {{form_start(updateuserform)}} 
+    {{form_widget(updateuserform)}} 
+    {{form_end(updateuserform)}}
+{% endblock %}
+
