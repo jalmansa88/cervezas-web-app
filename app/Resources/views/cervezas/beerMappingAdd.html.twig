@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Cervezas Web App  {% endblock %}
+
+{% block body %} 
+    <h1>Añadir cerveza a tu registro personal</h1>  
+    <form method="post" action="/user/{{userId}}/beer/add">
+        <select name="beerid">
+            {% for cerveza in cervezas %}
+                <option value="{{cerveza.id}}">{{ cerveza.nombre }} - Alcohol {{ cerveza.alc}}%</option>
+            {% endfor %}
+        </select>
+        Comentarios: <input type="text" name="notes">
+        <br>
+        <input type="submit" value="Añadir Cerveza">
+    </form>
+{% endblock %}

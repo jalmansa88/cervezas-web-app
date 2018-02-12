@@ -4,14 +4,14 @@
 
 {% block body %} 
     <h1> ¡Bienvenido {{ userName }}!</h1>
-    <p> Esta es tu lista de Cervezas: </p>
+    <p> Esta tu registro de Cervezas: </p>
     
     <ul>
         {% for cerveza in cervezas %}
             <li>
                 {{ cerveza.nombre }} - Alcohol {{ cerveza.alc}}% - Notas: {{cerveza.notes}}
-                [<a href="/user/{{userId}}/beer/delete/{{cerveza.id}}">Eliminar Cerveza</a>]
-                [<a href="/user/{{userId}}/beer/edit">Editar Nota</a>]
+                [<a href="/user/beer/delete/{{cerveza.mappingId}}">Eliminar Cerveza</a>]
+                [<a href="/user/beer/edit/{{cerveza.mappingId}}">Editar Nota</a>]
             </li>
         {% endfor %}
         <br>

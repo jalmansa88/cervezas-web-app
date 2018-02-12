@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Cervezas Web App  {% endblock %}
+
+{% block body %} 
+    <h1>¡Cerveza eliminada de tu usuario!</h1>
+    <p>La cerveza {{ beerName }} con el commentario {{ beerNote }}
+        acaba de ser suprimida de tu lista<p>
+    <a href="javascript:history.back()">Volver al Panel</a>
+{% endblock %}
