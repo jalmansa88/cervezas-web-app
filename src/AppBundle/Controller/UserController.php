@@ -134,6 +134,18 @@ class UserController extends Controller
         $form->handleRequest($request);
         
         if($form->isSubmitted() && $form->isValid()){
+            $userExist = $this->getDoctrine()
+                    ->getRepository('AppBundle:usuario')
+                    ->findBy(array('user' => $form['user']->getData()));
+            
+            if($userExist != null){
+                return $this->render('usuarios/loginMessage.html.twig', [
+                    'header' => "¡Usuario ya registrado!",
+                    'message' => "Elige un Username diferente",
+                    'button' => "Volver al Login"
+                ]);
+            }
+            
             $usuario->setNombre($form['nombre']->getData());
             $usuario->setPass($form['pass']->getData());
             $usuario->setUser($form['user']->getData());
